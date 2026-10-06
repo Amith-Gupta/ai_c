@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Calc (ai_c) - Next-Gen Intelligent Calculator & Function Grapher</title>
+  <meta name="description" content="AI Calc is a powerful modern computational workspace featuring scientific calculations, 2D function graphing, natural language math assistance, and calculation history.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="violet">
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-top" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="3" />
+            <line x1="8" y1="6" x2="16" y2="6" />
+            <line x1="16" y1="14" x2="16" y2="18" />
+            <path d="M16 10h.01" />
+            <path d="M12 10h.01" />
+            <path d="M8 10h.01" />
+            <path d="M12 14h.01" />
+            <path d="M8 14h.01" />
+            <path d="M12 18h.01" />
+            <path d="M8 18h.01" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>AI Calc <span class="badge">ai_c</span></h1>
+          <p class="subtitle">Computational Intelligence Suite</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-modes" aria-label="Calculator Modes">
+        <button id="mode-standard-btn" class="nav-tab active" data-tab="standard">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Standard
+        </button>
+        <button id="mode-scientific-btn" class="nav-tab" data-tab="scientific">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          Scientific
+        </button>
+        <button id="mode-grapher-btn" class="nav-tab" data-tab="grapher">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="3" x2="3" y2="21"/><path d="m5 16 5-6 4 4 6-9"/></svg>
+          Grapher
+        </button>
+        <button id="mode-ai-btn" class="nav-tab" data-tab="ai">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
+          AI Solver
+        </button>
+      </nav>
+
+      <!-- Utility Header Actions -->
+      <div class="header-actions">
+        <!-- Angle mode toggle -->
+        <button id="angle-mode-toggle" class="chip-btn" title="Toggle Radians / Degrees">RAD</button>
+        
+        <!-- History Drawer Button -->
+        <button id="history-toggle-btn" class="icon-btn" title="Calculation History" aria-label="Toggle History">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+
+        <!-- Theme selector -->
+        <div class="theme-picker" title="Switch Theme Accent">
+          <button class="theme-dot violet active" data-color="violet" aria-label="Violet Theme"></button>
+          <button class="theme-dot cyan" data-color="cyan" aria-label="Cyan Theme"></button>
+          <button class="theme-dot emerald" data-color="emerald" aria-label="Emerald Theme"></button>
+          <button class="theme-dot amber" data-color="amber" aria-label="Amber Theme"></button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace-layout">
+      <!-- Calculator / Core Section -->
+      <div class="calculator-panel glass-card">
+        <!-- Primary Display Screen -->
+        <div class="calc-screen" id="calc-display-container">
+          <div class="screen-meta">
+            <span id="memory-indicator" class="pill-tag hidden">M</span>
+            <span id="angle-indicator" class="pill-tag">RAD</span>
+            <div class="screen-actions">
+              <button id="copy-btn" class="screen-action-btn" title="Copy to clipboard" aria-label="Copy Result">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span id="copy-tooltip" class="copy-tooltip">Copied!</span>
+              </button>
+            </div>
+          </div>
+          <div id="expression-tape" class="expression-tape" title="Calculation formula"></div>
+          <div class="primary-result-row">
+            <span class="operator-glyph" id="eval-prefix">=</span>
+            <div id="primary-display" class="primary-display" tabIndex="0" role="textbox" aria-label="Calculator Result">0</div>
+          </div>
+        </div>
+
+        <!-- Tab Content 1 & 2: Calculator Keypad View -->
+        <div id="calculator-view" class="tab-view active">
+          <!-- Scientific Function Bar (Visible in Scientific Mode) -->
+          <div id="scientific-bar" class="scientific-bar hidden">
+            <button class="key func-key" data-func="sin">sin</button>
+            <button class="key func-key" data-func="cos">cos</button>
+            <button class="key func-key" data-func="tan">tan</button>
+            <button class="key func-key" data-func="sqrt">√</button>
+            <button class="key func-key" data-func="cbrt">∛</button>
+            <button class="key func-key" data-func="log">log</button>
+            <button class="key func-key" data-func="ln">ln</button>
+            <button class="key func-key" data-action="power">x^y</button>
+            <button class="key func-key" data-insert="pi">π</button>
+            <button class="key func-key" data-insert="e">e</button>
+            <button class="key func-key" data-func="abs">|x|</button>
+            <button class="key func-key" data-action="factorial">n!</button>
+          </div>
+
+          <!-- Memory Bar -->
+          <div class="memory-bar">
+            <button id="mem-mc-btn" class="mem-btn" data-mem="mc">MC</button>
+            <button id="mem-mr-btn" class="mem-btn" data-mem="mr">MR</button>
+            <button id="mem-mplus-btn" class="mem-btn" data-mem="m+">M+</button>
+            <button id="mem-mminus-btn" class="mem-btn" data-mem="m-">M−</button>
+            <button id="mem-ms-btn" class="mem-btn" data-mem="ms">MS</button>
+          </div>
+
+          <!-- Standard Keypad Grid -->
+          <div class="keypad-grid" id="main-keypad">
+            <button id="key-clear" class="key action-key key-clear" data-action="clear">AC</button>
+            <button id="key-paren-open" class="key action-key" data-insert="(">(</button>
+            <button id="key-paren-close" class="key action-key" data-insert=")">)</button>
+            <button id="key-delete" class="key action-key key-delete" data-action="backspace" aria-label="Delete">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+            </button>
+
+            <button class="key num-key" data-num="7">7</button>
+            <button class="key num-key" data-num="8">8</button>
+            <button class="key num-key" data-num="9">9</button>
+            <button id="key-divide" class="key op-key" data-op="/">÷</button>
+
+            <button class="key num-key" data-num="4">4</button>
+            <button class="key num-key" data-num="5">5</button>
+            <button class="key num-key" data-num="6">6</button>
+            <button id="key-multiply" class="key op-key" data-op="*">×</button>
+
+            <button class="key num-key" data-num="1">1</button>
+            <button class="key num-key" data-num="2">2</button>
+            <button class="key num-key" data-num="3">3</button>
+            <button id="key-subtract" class="key op-key" data-op="-">−</button>
+
+            <button class="key num-key" data-num="0">0</button>
+            <button id="key-decimal" class="key num-key" data-num=".">.</button>
+            <button id="key-percent" class="key action-key" data-action="percent">%</button>
+            <button id="key-add" class="key op-key" data-op="+">+</button>
+
+            <button id="key-sign" class="key action-key" data-action="toggle-sign">±</button>
+            <button id="key-ans" class="key action-key" data-action="ans">Ans</button>
+            <button id="key-equals" class="key equals-key" data-action="equals">=</button>
+          </div>
+        </div>
+
+        <!-- Tab Content 3: Function Grapher View -->
+        <div id="grapher-view" class="tab-view hidden">
+          <div class="grapher-controls">
+            <div class="input-group">
+              <span class="input-prefix">f(x) =</span>
+              <input type="text" id="graph-expr-input" class="modern-input" value="sin(x) * cos(x / 2)" placeholder="e.g. sin(x), x^2 - 4, 2 * x + 1" />
+              <button id="plot-btn" class="btn primary-btn">Plot</button>
+            </div>
+            <div class="graph-presets">
+              <span>Presets:</span>
+              <button class="chip-preset" data-expr="sin(x)">sin(x)</button>
+              <button class="chip-preset" data-expr="x^2 - 4">x² − 4</button>
+              <button class="chip-preset" data-expr="1 / x">1/x</button>
+              <button class="chip-preset" data-expr="exp(-x^2 / 2)">Gaussian</button>
+              <button class="chip-preset" data-expr="tan(x)">tan(x)</button>
+            </div>
+          </div>
+
+          <div class="canvas-wrapper">
+            <canvas id="graph-canvas" width="600" height="340"></canvas>
+            <div id="graph-coords" class="graph-coords">x: 0.00, y: 0.00</div>
+            <div class="canvas-toolbar">
+              <button id="graph-zoom-in" class="mini-tool" title="Zoom In">+</button>
+              <button id="graph-zoom-out" class="mini-tool" title="Zoom Out">−</button>
+              <button id="graph-reset" class="mini-tool" title="Reset View">⟲</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content 4: AI Math Assistant View -->
+        <div id="ai-view" class="tab-view hidden">
+          <div class="ai-assistant-wrapper">
+            <div class="ai-prompt-box">
+              <label for="ai-prompt-input" class="ai-label">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Ask any calculation, word problem, or conversion:
+              </label>
+              <div class="ai-input-row">
+                <input type="text" id="ai-prompt-input" class="modern-input" placeholder="e.g., '18% tip on 92 dollars', 'solve 3x + 12 = 0', '100 miles in km'" />
+                <button id="ai-ask-btn" class="btn primary-btn">Solve</button>
+              </div>
+            </div>
+
+            <!-- Suggestion chips -->
+            <div class="ai-quick-queries">
+              <button class="ai-chip" data-query="18% tip on 85 dollars">18% tip on $85</button>
+              <button class="ai-chip" data-query="convert 50 km to miles">50 km in miles</button>
+              <button class="ai-chip" data-query="solve 4x - 16 = 0">Solve 4x - 16 = 0</button>
+              <button class="ai-chip" data-query="stats [12, 18, 25, 30, 42]">Stats of [12, 18, 25, 30, 42]</button>
+            </div>
+
+            <!-- AI Solution Result Card -->
+            <div id="ai-result-card" class="ai-result-card hidden">
+              <div class="card-header">
+                <span class="ai-badge">AI Solution</span>
+                <span id="ai-query-echo" class="query-echo"></span>
+              </div>
+              <div class="card-body">
+                <div class="solution-highlight" id="ai-solution-main">--</div>
+                <div class="solution-steps" id="ai-solution-steps"></div>
+              </div>
+              <button id="apply-to-calc-btn" class="btn secondary-btn">Use in Calculator</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calculation History Drawer / Sidebar -->
+      <aside id="history-sidebar" class="history-sidebar glass-card">
+        <div class="history-header">
+          <div class="history-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <h2>History</h2>
+          </div>
+          <button id="clear-history-btn" class="text-btn" title="Clear all history">Clear</button>
+        </div>
+        <div id="history-list" class="history-list">
+          <div class="history-empty">No calculations yet. Perform a computation to build your tape.</div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>AI Calc v2.0 • Python Core + Web Interface</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/Amith-Gupta/ai_c" target="_blank" rel="noopener noreferrer" class="footer-link">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub Repository
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
